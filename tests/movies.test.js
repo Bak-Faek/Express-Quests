@@ -58,20 +58,13 @@ describe("POST /api/movies", () => {
     expect(movieInDatabase.title).toStrictEqual(newMovie.title);
   });
   it("should return an error", async () => {
-    const movieWithMissingProps = { title: "Harry Potter",
-    director: "Chris Columbus",
-    year: "2001",
-    color: true,
-    duration: 152 };
+    const movieWithMissingProps = { title: "Harry Potter" };
 
     const response = await request(app)
       .post("/api/movies")
       .send(movieWithMissingProps);
 
-      expect(response.status).toEqual(201);
-      expect(response.body).toHaveProperty("id");
-      expect(typeof response.body.id).toBe("number");
-
+    expect(response.status).toEqual(422);
   });
 });
 
