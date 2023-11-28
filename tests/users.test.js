@@ -139,4 +139,50 @@ describe("POST /api/users", () => {
     });
   });
 });
+describe("DELETE /api/users/:id", () => {
+  it("should delete user", async () => {
+    const newUser = {
+      firstname: "Captain",
+      lastname: "America",
+      email: "captain.america@avengers.com",
+      city: "world",
+      language: "American"
+    };
+
+    const [result] = await database.query(
+      "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+      [newUser.firstname, newUser.lastname, newUser.email, newUser.city, newUser.language]);
+
+    const id = result.insertId;
+
+    const deleteUser = {
+      firstname: "Captain",
+      lastname: "America",
+      email: "captain.america@avengers.com",
+      city: "world",
+      language: "American"
+    };
+
+    const response = await request(app)
+      .delete(`/api/users/${id}`)
+      .send(deleteUser);
+
+    expect(response.status).toEqual(204);
+
+  });
+  
+  it("should return no movie", async () => {
+    const newUser = {
+      firstname: "Captain",
+      lastname: "America",
+      email: "captain.america@avengers.com",
+      city: "world",
+      language: "American"
+    };
+
+    const response = await request(app).delete("/api/users/0").send(newUser);
+
+    expect(response.status).toEqual(404);
+  });
+});
 
