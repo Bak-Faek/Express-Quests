@@ -56,6 +56,18 @@ describe("POST /api/users", () => {
     expect(movieInDatabase).toHaveProperty("id");
     expect(movieInDatabase).toHaveProperty("firstname");
     expect(movieInDatabase.firstname).toStrictEqual(newUser.firstname);
+
+    expect(movieInDatabase).toHaveProperty("lastname");
+    expect(movieInDatabase.lastname).toStrictEqual(newUser.lastname);
+
+    expect(movieInDatabase).toHaveProperty("email");
+    expect(movieInDatabase.email).toStrictEqual(newUser.email);
+
+    expect(movieInDatabase).toHaveProperty("city");
+    expect(movieInDatabase.city).toStrictEqual(newUser.city);
+
+    expect(movieInDatabase).toHaveProperty("language");
+    expect(movieInDatabase.language).toStrictEqual(newUser.language);
   });
 
 
@@ -71,7 +83,7 @@ describe("POST /api/users", () => {
   
       const [result] = await database.query(
         "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
-        [newUser.firstname, newUser.lastname, newUser.email, newUser.color, newUser.duration]
+        [newUser.firstname, newUser.lastname, newUser.email, newUser.email, newUser.language]
       );
   
       const id = result.insertId;
