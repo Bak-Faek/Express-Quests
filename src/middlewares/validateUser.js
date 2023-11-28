@@ -17,7 +17,7 @@ const validateUser = (req, res, next) => {
     if (city === undefined) {
       errors.push({ field: "city", message: "This field is required" });
     }
-    if (duration === undefined) {
+    if (language === undefined) {
       errors.push({ field: "language", message: "This field is required" });
     }
    
