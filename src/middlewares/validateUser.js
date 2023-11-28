@@ -3,21 +3,21 @@ const validateUser = (req, res, next) => {
     const errors = [];
     const emailRegex = /[a-z0-9._]+@[a-z0-9-]+\.[a-z]{2,3}/;
   
-    if (firstname == null) {
+    if (firstname === undefined) {
         errors.push({ field: "firstname", message: "This field is required" });
       } else if (title.length >= 255) {
         errors.push({ field: "firstname", message: "Should contain less than 255 characters" });
       }
-    if (lastname == null) {
+    if (lastname === undefined) {
       errors.push({ field: "lastname", message: "This field is required" });
     }
     if (!emailRegex.test(email)) {
       errors.push({ field: 'email', message: 'Invalid email' });
     }
-    if (city == null) {
+    if (city === undefined) {
       errors.push({ field: "city", message: "This field is required" });
     }
-    if (duration == language) {
+    if (duration === undefined) {
       errors.push({ field: "language", message: "This field is required" });
     }
    
