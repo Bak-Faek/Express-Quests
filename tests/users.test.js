@@ -54,9 +54,77 @@ describe("POST /api/users", () => {
     const [movieInDatabase] = result;
 
     expect(movieInDatabase).toHaveProperty("id");
-
     expect(movieInDatabase).toHaveProperty("firstname");
     expect(movieInDatabase.firstname).toStrictEqual(newUser.firstname);
+  });
+
+
+  describe("PUT /api/users/:id", () => {
+    it("should edit user", async () => {
+      const newUser = {
+        firstname: "Mark",
+        lastname: "Torres",
+        email: `${crypto.randomUUID()}@wild.com`,
+        city: "New York",
+        language: "English",
+      };
+  
+      const [result] = await database.query(
+        "INSERT INTO users(firstname, lastname, email, city, language) VALUES (?, ?, ?, ?, ?)",
+        [newUser.firstname, newUser.lastname, newUser.email, newUser.color, newUser.duration]
+      );
+  
+      const id = result.insertId;
+  
+      const updatedUser = {
+        firstname: "Pat",
+        lastname: "Hayes",
+        email: `${crypto.randomUUID()}@wild.com`,
+        city: "Madrid",
+        language: "Spanish",
+      };
+  
+      const response = await request(app)
+        .put(`/api/users/${id}`)
+        .send(updatedUser);
+  
+      expect(response.status).toEqual(204);
+  
+      const [result1] = await database.query("SELECT * FROM users WHERE id=?", id);
+  
+      const [movieInDatabase] = result1;
+  
+      expect(movieInDatabase).toHaveProperty("id");
+  
+      expect(movieInDatabase).toHaveProperty("firstname");
+      expect(movieInDatabase.firstname).toStrictEqual(updatedUser.firstname);
+  
+      expect(movieInDatabase).toHaveProperty("lastname");
+      expect(movieInDatabase.lastname).toStrictEqual(updatedUser.lastname);
+  
+      expect(movieInDatabase).toHaveProperty("email");
+      expect(movieInDatabase.email).toStrictEqual(updatedUser.email);
+  
+      expect(movieInDatabase).toHaveProperty("city");
+      expect(movieInDatabase.city).toStrictEqual(updatedUser.city);
+  
+      expect(movieInDatabase).toHaveProperty("language");
+      expect(movieInDatabase.language).toStrictEqual(updatedUser.language);
+    });
+    
+    it("should return no user", async () => {
+      const newUser = {
+        firstname: "Mark",
+        lastname: "Torres",
+        email: `${crypto.randomUUID()}@wild.com`,
+        city: "New York",
+        language: "English",
+      };
+  
+      const response = await request(app).put("/api/users/0").send(newUser);
+  
+      expect(response.status).toEqual(404);
+    });
   });
 });
 
