@@ -1,16 +1,42 @@
 const database = require("../../database");
 
 const getMovies = (req, res) => {
+  const initialSql = "select * from movies";
+  const where = [];
+
+  if (req.query.color != null) {
+    where.push({
+      column: "color",
+      value: req.query.color,
+      operator: "=",
+    });
+  }
+  if (req.query.max_duration != null) {
+    where.push({
+      column: "duration",
+      value: req.query.max_duration,
+      operator: "<=",
+    });
+  }
+
   database
-    .query("select * from movies")
+    .query(
+      where.reduce(
+        (sql, { column, operator }, index) =>
+          `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+        initialSql
+      ),
+      where.map(({ value }) => value)
+    )
     .then(([movies]) => {
-      res.json(movies); // use res.json instead of console.log
+      res.json(movies);
     })
     .catch((err) => {
       console.error(err);
-      res.sendStatus(500);
+      res.status(500).send("Error retrieving data from database");
     });
 };
+
 
 const getMovieById = (req, res) => {
   const id = parseInt(req.params.id);
@@ -31,15 +57,40 @@ const getMovieById = (req, res) => {
 };
 
 const getUsers = (req, res) => {
-  database
-    .query("select * from users")
-    .then(([users]) => {
-      res.json(users); // use res.json instead of console.log
-    })
-    .catch((err) => {
-      console.error(err);
-      res.sendStatus(500);
+  const initialSql = "select * from users";
+  const where = [];
+  
+  if (req.query.language != null) {
+    where.push({
+      column: "language",
+      value: req.query.language,
+      operator: "=",
     });
+  }
+  if (req.query.city != null) {
+    where.push({
+      column: "city",
+      value: req.query.city,
+      operator: "=",
+    });
+  }
+
+  database
+  .query(
+    where.reduce(
+      (sql, { column, operator }, index) =>
+        `${sql} ${index === 0 ? "where" : "and"} ${column} ${operator} ?`,
+      initialSql
+    ),
+    where.map(({ value }) => value)
+  )
+  .then(([users]) => {
+    res.json(users);
+  })
+  .catch((err) => {
+    console.error(err);
+    res.status(500).send("Error retrieving data from database");
+  });
 };
 
 const getUsersById = (req, res) => {
