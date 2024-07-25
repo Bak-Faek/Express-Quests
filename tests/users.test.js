@@ -12,7 +12,7 @@ describe("GET /api/users", () => {
 
     expect(response.status).toEqual(200);
   });
-});
+}); 
 
 describe("GET /api/users/:id", () => {
   it("should return one user", async () => {
